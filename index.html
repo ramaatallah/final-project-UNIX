@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recommendation System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f4f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            text-align: center;
+            width: 400px;
+        }
+
+        h1 {
+            color: #2d3748;
+            margin-bottom: 10px;
+        }
+
+        p {
+            color: #718096;
+            margin-bottom: 30px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 16px;
+            margin-bottom: 15px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #4299e1;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #4299e1;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #3182ce;
+        }
+
+        .result {
+            margin-top: 25px;
+            padding: 15px;
+            background: #ebf8ff;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .result h2 {
+            color: #2b6cb0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 Recommendation System</h1>
+        <p>Enter a keyword to get a recommendation</p>
+
+        <input 
+            type="text" 
+            id="keywordInput" 
+            placeholder="e.g. hot, cold, rain..."
+        />
+        
+        <button onclick="getRecommendation()">
+            🔍 Get Recommendation
+        </button>
+
+        <div class="result" id="result">
+            <h2 id="resultText"></h2>
+        </div>
+    </div>
+
+    <script>
+        async function getRecommendation() {
+            const keyword = document.getElementById('keywordInput').value;
+
+            if (!keyword) {
+                alert('Please enter a keyword!');
+                return;
+            }
+
+            const response = await fetch(
+                `http://localhost:3000/recommend?input=${keyword}`
+            );
+            const data = await response.json();
+
+            document.getElementById('resultText').textContent = 
+                '✨ ' + data.recommendation;
+            document.getElementById('result').style.display = 'block';
+        }
+
+        
+        document.getElementById('keywordInput')
+            .addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') getRecommendation();
+            });
+    </script>
+</body>
+</html>
