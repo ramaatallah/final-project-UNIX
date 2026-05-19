@@ -10,7 +10,7 @@ app.use(cors());
 app.use(express.json());
 
 /* ✅ FIX: serving frontend from project root */
-app.use(express.static(path.join(__dirname, '..')));
+app.use(express.static(path.join(__dirname, '..', 'frontend')));
 
 /* Route: recommendation API */
 app.get('/recommend', (req, res) => {
