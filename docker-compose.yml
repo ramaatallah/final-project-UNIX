@@ -1,3 +1,4 @@
+version: '3.8'
 
 services:
   db:
@@ -11,7 +12,7 @@ services:
   backend:
     build: ./backend
     ports:
-      - "8080:3000"
+      - "3000:3000"
     environment:
       MYSQL_HOST: db
       MYSQL_PORT: 3306
@@ -20,3 +21,14 @@ services:
       MYSQL_DATABASE: recommendation_db
     depends_on:
       - db
+
+  jenkins:
+    image: jenkins/jenkins:lts
+    ports:
+      - "8080:8080"
+    volumes:
+      - jenkins_data:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+
+volumes:
+  jenkins_data:
