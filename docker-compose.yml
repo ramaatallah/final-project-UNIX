@@ -21,6 +21,7 @@ services:
       MYSQL_DATABASE: recommendation_db
     depends_on:
       - db
+    restart: on-failure
 
   jenkins:
     image: jenkins/jenkins:lts
