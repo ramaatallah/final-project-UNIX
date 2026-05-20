@@ -3,14 +3,17 @@ version: '3.8'
 services:
   db:
     image: mysql:8
+    container_name: mysql-db
     environment:
       MYSQL_ROOT_PASSWORD: root123
       MYSQL_DATABASE: recommendation_db
     ports:
       - "3307:3306"
+    restart: always
 
   backend:
     build: ./backend
+    container_name: backend-app
     ports:
       - "3000:3000"
     environment:
@@ -25,11 +28,14 @@ services:
 
   jenkins:
     image: jenkins/jenkins:lts
+    container_name: jenkins
     ports:
       - "8080:8080"
     volumes:
       - jenkins_data:/var/jenkins_home
       - /var/run/docker.sock:/var/run/docker.sock
+    privileged: true
+    restart: always
 
 volumes:
   jenkins_data:
