@@ -40,9 +40,7 @@ services:
   volumes:
     - jenkins_data:/var/jenkins_home
     - /var/run/docker.sock:/var/run/docker.sock
-  privileged: true
   user: root
   restart: always
-
 volumes:
   jenkins_data:
