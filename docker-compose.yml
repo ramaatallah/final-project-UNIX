@@ -10,6 +10,11 @@ services:
     ports:
       - "3307:3306"
     restart: always
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   backend:
     build: ./backend
@@ -23,7 +28,8 @@ services:
       MYSQL_PASSWORD: root123
       MYSQL_DATABASE: recommendation_db
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     restart: on-failure
 
   jenkins:
