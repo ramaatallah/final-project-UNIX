@@ -2,14 +2,14 @@
 
 MESSAGE="Auto commit: $(date)"
 
-cd ~/final-project || exit
+cd "/c/Users/USER-Q/Desktop/يونكس راوند 2/final-project-UNIX" || exit
 
 git add .
 
 git commit -m "$MESSAGE" || echo "no changes to commit"
 
-git pull origin main --rebase
+git pull origin new_branch --rebase
 
-git push origin main
+git push origin new_branch
 
 echo "Code pushed successfully!"
