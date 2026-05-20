@@ -7,7 +7,7 @@ const app = express();
 const PORT = 3000;
 
 app.use(cors());
-app.use(express.json());
+app.use(express.json());  
 
 /* ✅ FIX: serving frontend from project root */
 app.use(express.static(path.join(__dirname, '..', 'frontend')));
