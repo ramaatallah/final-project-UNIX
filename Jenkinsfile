@@ -3,29 +3,37 @@ pipeline {
 
     stages {
 
-        stage('Checkout') {
+        stage('Pull Code') {
             steps {
+                echo 'pull the code from gitHub...'
                 git branch: 'main',
                     url: 'https://github.com/ramaatallah/final-project-UNIX.git'
             }
         }
 
-        stage('Build Backend Image') {
+        stage('Install Dependencies') {
             steps {
-                sh 'docker compose build'
+                echo 'installing dependencies..'
+                sh 'cd backend && npm install'
             }
         }
 
-        stage('Run Containers') {
+        stage('Run Application') {
             steps {
-                sh 'docker compose up -d'
+                echo 'run app ..'
+                sh 'pkill -f "node server.js" || true'
+                sh 'cd backend && nohup node server.js &'
             }
         }
 
-        stage('Test Backend') {
+        stage('Test') {
             steps {
-                sh 'curl http://localhost:3000/health || true'
+                echo 'test app ..'
+                sh 'sleep 3 && curl http://localhost:3000/health'
             }
         }
+
     }
+
+    
 }
