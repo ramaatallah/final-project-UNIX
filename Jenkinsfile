@@ -3,31 +3,53 @@ pipeline {
 
     stages {
 
-        stage('Checkout Code') {
+        stage('Pull Code') {
             steps {
-                git branch: 'main', url: 'https://github.com/ramaatallah/final-project-UNIX.git'
+                echo '📥 سحب الكود من GitHub...'
+                git branch: 'main',
+                    url: 'https://github.com/ramaatallah/final-project-UNIX.git'
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                echo '📦 تثبيت المكتبات...'
+                dir('backend') {
+                    sh 'npm install'
+                }
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                dir('backend') {
-                    sh 'docker build -t my-backend-app .'
-                }
+                echo '🐳 بناء Docker Image...'
+                sh 'docker compose build'
             }
         }
 
-        stage('Stop Old Container') {
+        stage('Deploy Container') {
             steps {
-                sh 'docker stop backend-container || true'
-                sh 'docker rm backend-container || true'
+                echo '🚀 تشغيل الـ Container...'
+                sh 'docker compose down || true'
+                sh 'docker compose up -d'
             }
         }
 
-        stage('Run New Container') {
+        stage('Test') {
             steps {
-                sh 'docker run -d -p 3000:3000 --name backend-container my-backend-app'
+                echo '🧪 اختبار التطبيق...'
+                sh 'sleep 5 && curl http://localhost:3000/health'
             }
+        }
+
+    }
+
+    post {
+        success {
+            echo '✅ التطبيق شغال بنجاح على Docker!'
+        }
+        failure {
+            echo '❌ في مشكلة!'
         }
     }
 }
