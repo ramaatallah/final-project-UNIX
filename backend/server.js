@@ -6,32 +6,53 @@ const db = require('./db');
 const app = express();
 const PORT = 3000;
 
+/* Middleware */
 app.use(cors());
 app.use(express.json());
 
-/* ✅ FIX: serving frontend from project root */
+/* Serve frontend (if exists) */
 app.use(express.static(path.join(__dirname, '..', 'frontend')));
 
-/* Route: recommendation API */
+/* Root route */
+app.get('/', (req, res) => {
+    res.send('Backend is running 🚀');
+});
+
+/* Health check (مهم لـ Jenkins و Docker) */
+app.get('/health', (req, res) => {
+    res.json({
+        status: 'OK',
+        message: 'Server is healthy 🚀'
+    });
+});
+
+/* Recommendation API */
 app.get('/recommend', (req, res) => {
     const keyword = req.query.input;
 
     if (!keyword) {
-        return res.json({ recommendation: 'Please enter a keyword!' });
+        return res.status(400).json({
+            recommendation: 'Please enter a keyword!'
+        });
     }
 
     const query = 'SELECT recommendation FROM items WHERE keyword = ?';
 
     db.query(query, [keyword.toLowerCase()], (err, results) => {
         if (err) {
+            console.error('DB Error:', err);
             return res.status(500).json({ error: 'Database error' });
         }
 
         if (results.length === 0) {
-            return res.json({ recommendation: 'No recommendation found!' });
+            return res.json({
+                recommendation: 'No recommendation found!'
+            });
         }
 
-        res.json({ recommendation: results[0].recommendation });
+        res.json({
+            recommendation: results[0].recommendation
+        });
     });
 });
 

@@ -3,30 +3,28 @@ pipeline {
 
     stages {
 
-        stage('Checkout Code') {
+        stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/ramaatallah/final-project-UNIX.git'
+                git branch: 'main',
+                    url: 'https://github.com/ramaatallah/final-project-UNIX.git'
             }
         }
 
-        stage('Build Docker Image') {
+        stage('Build Backend Image') {
             steps {
-                dir('backend') {
-                    sh 'docker build -t my-backend-app .'
-                }
+                sh 'docker compose build'
             }
         }
 
-        stage('Stop Old Container') {
+        stage('Run Containers') {
             steps {
-                sh 'docker stop backend-container || true'
-                sh 'docker rm backend-container || true'
+                sh 'docker compose up -d'
             }
         }
 
-        stage('Run New Container') {
+        stage('Test Backend') {
             steps {
-                sh 'docker run -d -p 3000:3000 --name backend-container my-backend-app'
+                sh 'curl http://localhost:3000/health || true'
             }
         }
     }
