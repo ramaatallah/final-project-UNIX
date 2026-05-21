@@ -1,15 +1,11 @@
 #!/bin/bash
 
-MESSAGE="Auto commit: $(date)"
+echo "upload the code"
 
-cd ~/final-project || exit
+cd ~/final-project
 
 git add .
-
-git commit -m "$MESSAGE" || echo "no changes to commit"
-
-git pull origin main --rebase
-
+git commit -m "Auto update: $(date)"
 git push origin main
 
-echo "Code pushed successfully!"
+echo " uploading successfully"
