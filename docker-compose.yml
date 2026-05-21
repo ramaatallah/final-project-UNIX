@@ -1,33 +1,45 @@
 services:
 
-  app:
-    build: .
-    ports:
-      - "3000:3000"
-    environment:
-      - DB_HOST=db
-      - DB_USER=root
-      - DB_PASSWORD=root
-      - DB_NAME=recommendation_db
-    depends_on:
-      db:
-        condition: service_healthy
-    restart: always
-
   db:
     image: mysql:8.0
+    container_name: mysql-db
+
     environment:
-      - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_DATABASE=recommendation_db
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: recommendation_db
+
+    ports:
+      - "3307:3306"
+
     volumes:
       - ./database/setup.sql:/docker-entrypoint-initdb.d/setup.sql
       - db_data:/var/lib/mysql
+
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"]
-      interval: 15s
-      timeout: 10s
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-proot"]
+      interval: 10s
+      timeout: 5s
       retries: 10
-      start_period: 30s
+
+    restart: always
+
+  app:
+    build: .
+    container_name: backend-app
+
+    ports:
+      - "3000:3000"
+
+    environment:
+      DB_HOST: db
+      DB_USER: root
+      DB_PASSWORD: root
+      DB_NAME: recommendation_db
+
+    depends_on:
+      db:
+        condition: service_healthy
+
     restart: always
 
 volumes:
