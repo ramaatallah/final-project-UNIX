@@ -1,5 +1,20 @@
 services:
 
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: recommendation_db
+    volumes:
+      - ./database/setup.sql:/docker-entrypoint-initdb.d/setup.sql
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
   app:
     build: .
     ports:
@@ -12,19 +27,7 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    restart: always
+    restart: on-failure
 
-  db:
-    image: mysql:8.0
-    container_name: mysql-db
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: recommendation_db
-    volumes:
-      - ./database/setup.sql:/docker-entrypoint-initdb.d/setup.sql
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-proot"]
-      interval: 10s
-      timeout: 5s
-      retries: 10
-    restart: always
+volumes:
+  db_data:
