@@ -1,15 +1,11 @@
 #!/bin/bash
 
-MESSAGE="Auto commit: $(date)"
+echo "upload the code"
 
-cd "/c/Users/USER-Q/Desktop/يونكس راوند 2/final-project-UNIX" || exit
+cd ~/final-project
 
 git add .
+git commit -m "Auto update: $(date)"
+git push origin main
 
-git commit -m "$MESSAGE" || echo "no changes to commit"
-
-git pull origin new_branch --rebase
-
-git push origin new_branch
-
-echo "Code pushed successfully!"
+echo " uploading successfully"

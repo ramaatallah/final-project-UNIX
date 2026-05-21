@@ -1,5 +1,4 @@
 CREATE DATABASE IF NOT EXISTS recommendation_db;
-
 USE recommendation_db;
 
 CREATE TABLE IF NOT EXISTS items (
@@ -8,7 +7,7 @@ CREATE TABLE IF NOT EXISTS items (
     recommendation VARCHAR(200)
 );
 
-INSERT INTO items (keyword, recommendation) VALUES
+INSERT IGNORE INTO items (keyword, recommendation) VALUES
 ('hot', 'Summer'),
 ('cold', 'Winter'),
 ('rain', 'Autumn'),
