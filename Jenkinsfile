@@ -5,7 +5,7 @@ pipeline {
 
         stage('Pull Code') {
             steps {
-                echo '📥 سحب الكود من GitHub...'
+                echo '📥 سحب الكود...'
                 git branch: 'main',
                     url: 'https://github.com/ramaatallah/final-project-UNIX.git'
             }
@@ -20,24 +20,18 @@ pipeline {
             }
         }
 
-        stage('Build Docker Image') {
+        stage('Deploy') {
             steps {
-                echo '🐳 بناء Docker Image...'
-                sh 'docker compose build'
-            }
-        }
-
-        stage('Deploy Container') {
-            steps {
-                echo '🚀 تشغيل الـ Container...'
-                sh 'docker compose down || true'
-                sh 'docker compose up -d'
+                echo '🐳 Deploy على Docker...'
+                sh 'cd /home/ramaatallah/final-project && docker compose down || true'
+                sh 'cd /home/ramaatallah/final-project && docker compose build'
+                sh 'cd /home/ramaatallah/final-project && docker compose up -d'
             }
         }
 
         stage('Test') {
             steps {
-                echo '🧪 اختبار التطبيق...'
+                echo '🧪 اختبار...'
                 sh 'sleep 5 && curl http://localhost:3000/health'
             }
         }
@@ -46,7 +40,7 @@ pipeline {
 
     post {
         success {
-            echo '✅ التطبيق شغال بنجاح على Docker!'
+            echo '✅ التطبيق اتحدث بنجاح!'
         }
         failure {
             echo '❌ في مشكلة!'
