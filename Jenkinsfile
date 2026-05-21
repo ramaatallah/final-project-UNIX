@@ -5,40 +5,26 @@ pipeline {
 
         stage('Pull Code') {
             steps {
-                echo '📥 سحب الكود من GitHub...'
+                echo 'PULL CODE'
                 git branch: 'main',
                     url: 'https://github.com/ramaatallah/final-project-UNIX.git'
             }
         }
 
-        stage('Install Dependencies') {
+        stage('Deploy') {
             steps {
-                echo '📦 تثبيت المكتبات...'
-                dir('backend') {
-                    sh 'npm install'
-                }
-            }
-        }
-
-        stage('Build Docker Image') {
-            steps {
-                echo '🐳 بناء Docker Image...'
-                sh 'docker compose build'
-            }
-        }
-
-        stage('Deploy Container') {
-            steps {
-                echo '🚀 تشغيل الـ Container...'
+                echo 'Deploy على Docker...'
+                sh 'docker rm -f mysql-db || true'
                 sh 'docker compose down || true'
+                sh 'docker compose build'
                 sh 'docker compose up -d'
             }
         }
 
         stage('Test') {
             steps {
-                echo '🧪 اختبار التطبيق...'
-                sh 'sleep 5 && curl http://localhost:3000/health'
+                echo 'اختبار...'
+                sh 'sleep 10 && curl http://localhost:3000/health'
             }
         }
 
@@ -46,10 +32,10 @@ pipeline {
 
     post {
         success {
-            echo '✅ التطبيق شغال بنجاح على Docker!'
+            echo 'التطبيق اتحدث!'
         }
         failure {
-            echo '❌ في مشكلة!'
+            echo 'في مشكلة!'
         }
     }
 }
