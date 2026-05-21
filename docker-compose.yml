@@ -23,10 +23,11 @@ services:
       - ./database/setup.sql:/docker-entrypoint-initdb.d/setup.sql
       - db_data:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-proot"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
     restart: always
 
 volumes:
