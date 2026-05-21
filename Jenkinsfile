@@ -11,15 +11,6 @@ pipeline {
             }
         }
 
-        stage('Install Dependencies') {
-            steps {
-                echo '📦 تثبيت المكتبات...'
-                dir('backend') {
-                    sh 'npm install'
-                }
-            }
-        }
-
         stage('Deploy') {
             steps {
                 echo '🐳 Deploy على Docker...'
@@ -40,7 +31,7 @@ pipeline {
 
     post {
         success {
-            echo '✅ التطبيق اتحدث بنجاح!'
+            echo '✅ التطبيق اتحدث!'
         }
         failure {
             echo '❌ في مشكلة!'
